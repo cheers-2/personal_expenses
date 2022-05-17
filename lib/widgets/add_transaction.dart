@@ -50,8 +50,8 @@ class _AddTransactionState extends State<AddTransaction> {
             Container(
               margin: const EdgeInsets.only(top: 15),
               child: ElevatedButton(
-                child: const Text('Add Transaction'),
                 onPressed: submitData,
+                child: const Text('Add Transaction'),
               ),
             )
           ],
