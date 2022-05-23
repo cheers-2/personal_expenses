@@ -34,6 +34,10 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+          onPrimary: Colors.white,
+        )),
       ),
     );
   }
@@ -51,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Transaction(
       id: 't1',
       title: 'Shoes',
-      amount: 12.13123123,
+      amount: 12.12,
       date: DateTime.now(),
     ),
     Transaction(
@@ -72,12 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime datePicked) {
     final newTransaction = Transaction(
       id: DateTime.now().toString(),
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: datePicked,
     );
 
     setState(() {
