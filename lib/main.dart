@@ -58,12 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
       amount: 12.12,
       date: DateTime.now(),
     ),
-    Transaction(
-      id: 't2',
-      title: 'Bag',
-      amount: 55.99,
-      date: DateTime.now(),
-    )
   ];
 
   List<Transaction> get _recentTransactions {
@@ -98,6 +92,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
