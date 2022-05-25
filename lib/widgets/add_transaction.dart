@@ -14,6 +14,7 @@ class _AddTransactionState extends State<AddTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDate;
+  // ? Datetime? agar variabel bisa di set menjadi null, karena ada nya null safety varibel tidak bisa menajdi null maka dipakai ?
 
   void _submitData() {
     final enteredTitle = _titleController.text;
@@ -75,6 +76,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     child: Text(_selectedDate == null
                         ? 'No Date Chosen'
                         : 'Picked Date : ${DateFormat.yMd().format(_selectedDate!)}'),
+                    //* _selectedDate! pakai ! karena DateTime? (Line 16)
                   ),
                   TextButton(
                     onPressed: _presentDatePicker,
