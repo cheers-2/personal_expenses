@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddTransaction extends StatefulWidget {
-  final Function addNewTranasction;
+  final Function addNewTransaction;
 
-  const AddTransaction(this.addNewTranasction, {Key? key}) : super(key: key);
+  const AddTransaction(this.addNewTransaction, {Key? key}) : super(key: key);
 
   @override
   State<AddTransaction> createState() => _AddTransactionState();
@@ -23,7 +23,7 @@ class _AddTransactionState extends State<AddTransaction> {
       return;
     }
 
-    widget.addNewTranasction(
+    widget.addNewTransaction(
       enteredTitle,
       enteredAmount,
       _selectedDate,

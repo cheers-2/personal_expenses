@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
-import '../widgets/chart.dart';
-import '../widgets/transaction_list.dart';
+import 'widgets/Chart/chart.dart';
+import 'widgets/Transaction/transaction_list.dart';
 import '../models/transaction.dart';
-import '../widgets/add_transaction.dart';
+import 'widgets/Transaction/add_transaction.dart';
 
 void main() {
-  //* Disable Landscap Mode
+  //* Disable Landscape Mode
   // WidgetsFlutterBinding.ensureInitialized();
   // SystemChrome.setPreferredOrientations([
   //   DeviceOrientation.portraitUp,
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // ),
     // Transaction(
     //   id: 't5',
-    //   title: 'Glasess',
+    //   title: 'Glasses',
     //   amount: 1299.99,
     //   date: DateTime.now(),
     // ),
@@ -132,15 +132,61 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildLandscapeContent(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text("Show Chart"),
+          Switch(
+              value: _switchChart,
+              onChanged: (val) {
+                setState(() {
+                  _switchChart = val;
+                });
+              }),
+        ],
+      ),
+      _switchChart
+          /**
+           * ? MediaQuery.of(context).size.height for get the height of the device screen size
+           * ? appBar.preferredSize.height for get the App bar height
+           * ? MediaQuery.of(context).padding.top get the height of notches of the device 
+           */
+          ? SizedBox(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransactions),
+            )
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPortraitContent(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      SizedBox(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.3,
+        child: Chart(_recentTransactions),
+      ),
+      txListWidget
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     //* Cek Device Landscape / Portrait
     final mediaQuery = MediaQuery.of(context);
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final appBar = AppBar(
-      title: const Text('Persoanl Expenses'),
+    final PreferredSizeWidget appBar = AppBar(
+      title: const Text('Personal Expenses'),
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.add),
@@ -155,54 +201,31 @@ class _MyHomePageState extends State<MyHomePage> {
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            /**
-             * ? MediaQuery.of(context).size.height for get the height of the device screen size
-             * ? appBar.preferredSize.height for get the App bar height
-             * ? MediaQuery.of(context).padding.top get the height of notches of the device 
-             */
             if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text("Show Chart"),
-                  Switch(
-                      value: _switchChart,
-                      onChanged: (val) {
-                        setState(() {
-                          _switchChart = val;
-                        });
-                      }),
-                ],
+              ..._buildLandscapeContent(
+                mediaQuery,
+                appBar,
+                txListWidget,
               ),
-            if (isLandscape)
-              _switchChart
-                  ? SizedBox(
-                      height: (mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7,
-                      child: Chart(_recentTransactions),
-                    )
-                  : txListWidget,
             if (!isLandscape)
-              SizedBox(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions),
+              ..._buildPortraitContent(
+                mediaQuery,
+                appBar,
+                txListWidget,
               ),
-            if (!isLandscape) txListWidget,
           ],
         ),
       ),
+    );
+    return Scaffold(
+      appBar: appBar,
+      body: pageBody,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
